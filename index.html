@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Easy Study — Subject Menu, Markdown Examples &amp; TTS</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+      --text: #161e2e;
+      --muted: #4b5563;
+      --accent: #1d4ed8;
+      --accent-hover: #1e40af;
+      --accent-light: #eff6ff;
+      --border: #dce3ec;
+      --danger: #b91c1c;
+      --code-bg: #eef2f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 2rem 1rem 5rem;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand h1 {
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn:hover {
+      background: var(--surface-alt);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Audio Toolbar */
+    .audio-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1.1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .audio-bar label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    select {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface-alt);
+      color: var(--text);
+      font-size: 0.88rem;
+      max-width: 230px;
+    }
+
+    .audio-status {
+      margin-left: auto;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Breadcrumb / Navigation Bar */
+    .nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .crumb-link {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Drawer for Adding Topics */
+    .drawer {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .drawer.open {
+      display: block;
+    }
+
+    .drawer h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .drawer-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    input[type="text"],
+    input[type="search"],
+    textarea {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.96rem;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    /* Rendered Markdown Styles */
+    .md-content p {
+      margin-bottom: 0.55rem;
+    }
+
+    .md-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .md-content ul,
+    .md-content ol {
+      margin: 0.45rem 0 0.65rem 1.35rem;
+    }
+
+    .md-content li {
+      margin-bottom: 0.25rem;
+    }
+
+    .md-content blockquote {
+      margin: 0.5rem 0;
+      padding: 0.45rem 0.8rem;
+      border-left: 3px solid var(--accent);
+      background: rgba(29, 78, 216, 0.05);
+      border-radius: 0 6px 6px 0;
+      color: var(--text);
+    }
+
+    .md-content code {
+      background: var(--code-bg);
+      padding: 0.12rem 0.38rem;
+      border-radius: 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88em;
+    }
+
+    .md-content h4 {
+      font-size: 0.96rem;
+      margin: 0.5rem 0 0.25rem;
+      color: var(--text);
+    }
+
+    /* Main Menu: Subject Category Cards */
+    .view-title {
+      font-size: 1.45rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .view-subtitle {
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.15rem;
+    }
+
+    .category-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.45rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.85rem;
+      transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .category-box:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .category-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-box h2 {
+      font-size: 1.25rem;
+      color: var(--text);
+    }
+
+    .count-pill {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .category-box p {
+      font-size: 0.93rem;
+      color: var(--muted);
+    }
+
+    .open-hint {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Big Topic Boxes Grid */
+    .search-box {
+      margin-bottom: 1.25rem;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 500px) {
+      .topic-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .topic-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      cursor: pointer;
+      transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .topic-box:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+    }
+
+    .topic-box.speaking-card {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
+    }
+
+    .topic-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      margin-bottom: 0.35rem;
+    }
+
+    .topic-box h3 {
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .topic-box .preview {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .topic-box .example-snippet {
+      background: var(--surface-alt);
+      border-left: 3px solid var(--accent);
+      padding: 0.7rem 0.9rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .topic-box-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.45rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Mic TTS Button */
+    .mic-btn {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--accent-light);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .mic-btn:hover {
+      background: #dbeafe;
+    }
+
+    .mic-btn.speaking {
+      background: var(--danger);
+      color: #ffffff;
+      border-color: var(--danger);
+    }
+
+    .mic-icon {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* Focused Detail View */
+    .detail-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    }
+
+    @media (max-width: 600px) {
+      .detail-card {
+        padding: 1.35rem;
+      }
+    }
+
+    .detail-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-title {
+      font-size: 1.85rem;
+      line-height: 1.25;
+      margin-top: 0.25rem;
+    }
+
+    .detail-section {
+      margin-top: 1.45rem;
+    }
+
+    .detail-section h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.55rem;
+    }
+
+    .detail-summary {
+      font-size: 1.08rem;
+      color: var(--text);
+    }
+
+    .steps-list {
+      margin-left: 1.35rem;
+      font-size: 1rem;
+    }
+
+    .steps-list li {
+      margin-bottom: 0.45rem;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 720px) {
+      .examples-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .example-card {
+      background: var(--surface-alt);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.15rem;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .example-card-title {
+      display: block;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      color: var(--text);
+    }
+
+    /* Longer, Straightforward References Section */
+    .references-box {
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .references-box h3 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .ref-list {
+      list-style: none;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .ref-item {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1.05rem;
+      font-size: 0.92rem;
+    }
+
+    .ref-citation {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .ref-note {
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .ref-link {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .ref-link:hover {
+      text-decoration: underline;
+    }
+
+    .detail-nav {
+      margin-top: 1.75rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand" id="homeLogoBtn" title="Return to Subject Menu">
+        <h1>Easy Study</h1>
+        <p>Pick a subject category, click a big topic box for a full view, read Markdown examples, or tap the mic to listen.</p>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn" id="mainMenuBtn">Home</button>
+        <button type="button" class="btn btn-primary" id="toggleDrawerBtn">+ Add Topic</button>
+      </div>
+    </header>
+
+    <!-- Audio Controls -->
+    <section class="audio-bar" aria-label="Text-to-speech controls">
+      <label for="voiceSelect">
+        Voice:
+        <select id="voiceSelect"></select>
+      </label>
+      <label for="rateSelect">
+        Speed:
+        <select id="rateSelect">
+          <option value="0.8">0.8x (Slower)</option>
+          <option value="0.95" selected>0.95x (Clear)</option>
+          <option value="1.15">1.15x (Faster)</option>
+          <option value="1.35">1.35x (Quick)</option>
+        </select>
+      </label>
+      <span class="audio-status" id="audioStatus">Ready to read</span>
+    </section>
+
+    <!-- Add Topic Drawer -->
+    <section class="drawer" id="addDrawer" aria-label="Add new topic">
+      <h2>Add a Straightforward Topic</h2>
+      <p class="drawer-note">Examples support Markdown: use <code>**bold**</code>, <code>*italics*</code>, <code>- bullet lists</code>, <code>1. numbered lists</code>, <code>`code`</code>, and <code>&gt; quotes</code>.</p>
+      <form id="lessonForm" class="form-grid">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inputTitle">Topic Title</label>
+            <input type="text" id="inputTitle" required placeholder="e.g., Compound Interest" />
+          </div>
+          <div class="form-group">
+            <label for="inputSubject">Subject Category</label>
+            <input type="text" id="inputSubject" required placeholder="e.g., Finance" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputSummary">Straightforward Summary (Markdown supported)</label>
+          <textarea id="inputSummary" required placeholder="Explain the concept in plain, direct language..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="inputSteps">How It Works (One step per line; Markdown supported)</label>
+          <textarea id="inputSteps" required placeholder="Step 1...&#10;Step 2...&#10;Step 3..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inputEx1">Everyday Example 1 (Markdown)</label>
+            <textarea id="inputEx1" required placeholder="**Scenario:** ...&#10;- Detail 1&#10;- Detail 2"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="inputEx2">Everyday Example 2 (Markdown)</label>
+            <textarea id="inputEx2" required placeholder="**Scenario:** ...&#10;- Detail 1&#10;- Detail 2"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inputRefCitation">Reference Citation (Author, Year, Title, Source)</label>
+            <input type="text" id="inputRefCitation" required placeholder="e.g., Greenlaw & Shapiro (2022). Principles of Economics, Ch. 22. OpenStax." />
+          </div>
+          <div class="form-group">
+            <label for="inputRefNote">Why This Reference Helps (Straightforward Note)</label>
+            <input type="text" id="inputRefNote" required placeholder="e.g., Explains price indexes and real wages in plain textbook chapters." />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Topic</button>
+      </form>
+    </section>
+
+    <!-- Breadcrumb Bar -->
+    <nav class="nav-bar" id="navBar" aria-label="Navigation"></nav>
+
+    <!-- Dynamic View Container -->
+    <main id="appView"></main>
+  </div>
+
+  <script>
+    const categoryDescriptions = {
+      "Computer Science": "Code patterns, algorithms, and computing rules explained with everyday routines and Markdown examples.",
+      "Economics": "Money, prices, incentives, and trade broken down into clear real-world choices.",
+      "Biology": "Cells, living systems, and natural processes explained through familiar comparisons.",
+      "Physics": "Motion, forces, and space-time made concrete without heavy math first.",
+      "Psychology": "How the mind notices, judges, and remembers information in daily life."
+    };
+
+    const defaultLessons = [
+      {
+        id: "recursion",
+        subject: "Computer Science",
+        level: "Core Programming",
+        title: "Recursion",
+        summary: "Recursion is a method where a task solves a large problem by breaking it into a smaller version of the exact same task, repeating until it hits a problem so small it can be solved immediately.",
+        steps: [
+          "Check if the problem is already at its smallest, simplest case (the **base case**). If yes, stop and return the answer right away.",
+          "If not, take one small step and hand the remaining smaller piece back to the same rule.",
+          "Pass the solved pieces back up the chain until the full answer is assembled."
+        ],
+        examples: [
+          {
+            label: "Counting Rows in a Dark Theater",
+            markdown: `You sit in the back row and want to know your row number without standing up.
+
+- You tap the person in front of you and ask their row.
+- They tap the person in front of them until someone in **Row 1** answers \`1\`.
+- Each person adds \`1\` and passes the number back to you.
+
+> **Base case:** Row 1 stops asking forward and gives the starting number.`
+          },
+          {
+            label: "Nested Boxes",
+            markdown: `You receive a sealed box containing a smaller box, which contains another box, down to a box holding a key.
+
+1. Open the current box.
+2. If you see a **key**, stop—you found it.
+3. If you see a **smaller box**, repeat the same rule on that box.`
+          }
+        ],
+        references: [
+          {
+            citation: "Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to Algorithms (4th ed.), Chapter 4: Divide-and-Conquer. MIT Press.",
+            note: "Covers how recursive algorithms split big tasks into smaller subproblems and why a clear stopping condition prevents infinite loops.",
+            url: "https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/"
+          },
+          {
+            citation: "Downey, A. B. (2015). Think Python: How to Think Like a Computer Scientist (2nd ed.), Chapter 5: Recursion. Green Tea Press.",
+            note: "Gives beginner-friendly Python examples of recursive functions and stack behavior in straightforward language.",
+            url: "https://greenteapress.com/wp/think-python-2e/"
+          }
+        ]
+      },
+      {
+        id: "binary-search",
+        subject: "Computer Science",
+        level: "Algorithms",
+        title: "Binary Search",
+        summary: "Binary search finds an item in a sorted list by checking the middle first and throwing away half of the remaining options with every guess.",
+        steps: [
+          "Make sure the list is already **sorted** (for example, A to Z or smallest number to largest).",
+          "Check the item in the middle of the current search range.",
+          "Eliminate half of the list that cannot hold the target, then repeat on the remaining half."
+        ],
+        examples: [
+          {
+            label: "Guessing a Number from 1 to 100",
+            markdown: `Instead of guessing \`1, 2, 3\` one by one:
+
+- Guess **50** first.
+- If the secret number is higher, cross out **1 through 50** completely.
+- Guess **75** next, cutting the remaining 50 numbers down to 25.`
+          },
+          {
+            label: "Finding a Name in an Alphabetical Binder",
+            markdown: `Looking for **Patel** in a 400-page sorted directory:
+
+- Open near page 200 (letter **K**).
+- Since \`P\` comes after \`K\`, ignore the first 200 pages.
+- Open halfway through the back half and repeat until you land on **Patel**.`
+          }
+        ],
+        references: [
+          {
+            citation: "Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to Algorithms (4th ed.), Section 2.3. MIT Press.",
+            note: "Explains why halving the search space each step makes searching large sorted lists much faster than checking item by item.",
+            url: "https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/"
+          },
+          {
+            citation: "Sedgewick, R., & Wayne, K. (2011). Algorithms (4th ed.), Section 1.1: Binary Search. Addison-Wesley.",
+            note: "Provides a clear trace of left, middle, and right boundaries so you can see how the search window shrinks.",
+            url: "https://algs4.cs.princeton.edu/"
+          }
+        ]
+      },
+      {
+        id: "inflation",
+        subject: "Economics",
+        level: "Macroeconomics",
+        title: "Inflation",
+        summary: "Inflation is a broad rise in prices across an economy over time. When average prices climb, each dollar buys a smaller amount of goods and services than before.",
+        steps: [
+          "Total demand for goods rises faster than supply, or input costs like ingredients, energy, and wages go up.",
+          "Businesses raise prices to cover higher operating costs or meet strong buyer demand.",
+          "Over time, everyday expenses take more dollars, reducing how much a saved dollar can buy."
+        ],
+        examples: [
+          {
+            label: "The Grocery Basket",
+            markdown: `Suppose a standard basket of **bread, milk, eggs, fruit, and chicken** costs **$50** today.
+
+- If prices rise across the economy, that same basket might cost **$62** later.
+- The food itself is unchanged, but **each dollar buys less** than before.`
+          },
+          {
+            label: "Limited Seats at a Popular Event",
+            markdown: `Imagine **120 buyers** want tickets to a **60-seat** venue and everyone has extra spending money.
+
+- Because only **60 seats** exist, buyers compete by offering higher prices.
+- Higher winning bids push the ticket price upward.`
+          }
+        ],
+        references: [
+          {
+            citation: "Greenlaw, S. A., & Shapiro, D. (2022). Principles of Economics (3rd ed.), Chapter 22: Inflation. OpenStax, Rice University.",
+            note: "Introduces price indexes, real vs. nominal values, and how inflation affects households, savers, and borrowers in plain terms.",
+            url: "https://openstax.org/details/books/principles-economics-3e"
+          },
+          {
+            citation: "Reserve Bank of Australia. (2024). Explainer: Inflation and its Measurement.",
+            note: "Shows in everyday language how consumer price baskets track changes in the cost of living over time.",
+            url: "https://www.rba.gov.au/education/resources/explainers/inflation-and-its-measurement.html"
+          }
+        ]
+      },
+      {
+        id: "opportunity-cost",
+        subject: "Economics",
+        level: "Microeconomics",
+        title: "Opportunity Cost",
+        summary: "Opportunity cost is the value of the next-best option you give up whenever you make a choice.",
+        steps: [
+          "List the options you can realistically pick given your limited time, money, or energy.",
+          "Choose the option you prefer most right now.",
+          "Identify the single best alternative you gave up—that is your **opportunity cost**."
+        ],
+        examples: [
+          {
+            label: "Spending $50 on Tickets vs. Shoes",
+            markdown: `You have **$50** and want both **concert tickets** and **running shoes**.
+
+- You buy the **concert tickets**.
+- You miss out on the **running shoes**—those shoes are the opportunity cost of your choice.`
+          },
+          {
+            label: "Evening Shift vs. Exam Prep",
+            markdown: `You have three free hours on Tuesday night:
+
+1. Work a paid shift and earn cash now.
+2. Study for Thursday's exam.
+
+If you pick the shift, your opportunity cost is the **exam preparation** you gave up.`
+          }
+        ],
+        references: [
+          {
+            citation: "Greenlaw, S. A., & Shapiro, D. (2022). Principles of Economics (3rd ed.), Chapter 2: Choice in a World of Scarcity. OpenStax, Rice University.",
+            note: "Connects limited resources and trade-offs directly to opportunity cost using clear everyday budget and time examples.",
+            url: "https://openstax.org/details/books/principles-economics-3e"
+          },
+          {
+            citation: "Mankiw, N. G. (2021). Principles of Economics (9th ed.), Chapter 1: Ten Principles of Economics. Cengage Learning.",
+            note: "Highlights 'the cost of something is what you give up to get it' as a core rule of everyday decision-making.",
+            url: "https://www.cengage.com/"
+          }
+        ]
+      },
+      {
+        id: "osmosis",
+        subject: "Biology",
+        level: "Cell Biology",
+        title: "Osmosis",
+        summary: "Osmosis is the movement of water across a thin, selective barrier from where water is less crowded with dissolved stuff to where water has more dissolved salt or sugar.",
+        steps: [
+          "A **semipermeable membrane** separates two liquids that have different amounts of dissolved particles.",
+          "Water molecules move through the barrier easily, while larger dissolved particles like salt or sugar stay behind.",
+          "Water flows toward the side with higher dissolved concentration until concentrations move closer to balance."
+        ],
+        examples: [
+          {
+            label: "Crisping Up Limp Celery",
+            markdown: `Celery left in the fridge loses water and turns limp.
+
+- Place the stalks in a glass of **plain tap water**.
+- Water moves into the plant cells where sugars and minerals are more concentrated.
+- The cells fill back up and the celery becomes **firm and crisp** again.`
+          },
+          {
+            label: "Salting Cucumber Slices",
+            markdown: `Sprinkle salt over fresh cucumber slices on a plate:
+
+- Salt creates a concentrated layer outside the cells.
+- Water moves out of the cucumber cells toward the salt, forming **visible water droplets** on top.`
+          }
+        ],
+        references: [
+          {
+            citation: "Clark, M. A., Douglas, M., & Choi, J. (2018). Biology 2e, Section 5.2: Passive Transport. OpenStax, Rice University.",
+            note: "Explains osmosis alongside diffusion and tonicity with clear diagrams of water movement across cell membranes.",
+            url: "https://openstax.org/details/books/biology-2e"
+          },
+          {
+            citation: "Alberts, B. et al. (2022). Molecular Biology of the Cell (7th ed.), Chapter 11: Membrane Transport of Small Molecules. W. W. Norton & Company.",
+            note: "Provides a detailed look at how lipid bilayers and water channels regulate osmotic balance in living cells.",
+            url: "https://www.ncbi.nlm.nih.gov/books/NBK26815/"
+          }
+        ]
+      },
+      {
+        id: "spacetime-curvature",
+        subject: "Physics",
+        level: "Astrophysics",
+        title: "Spacetime Curvature",
+        summary: "Instead of treating gravity as an invisible pull across empty space, general relativity explains that heavy objects bend space and time, and objects follow those curves.",
+        steps: [
+          "Mass and energy warp the surrounding four-dimensional fabric of **spacetime**.",
+          "Heavier and denser objects create a deeper curve in nearby spacetime.",
+          "Planets, moons, and light beams follow the curved geometry around massive objects, which appears to us as gravity and orbits."
+        ],
+        examples: [
+          {
+            label: "Bowling Ball on a Trampoline",
+            markdown: `Set a heavy **bowling ball** in the middle of a stretched trampoline:
+
+- The mat dips inward around the ball.
+- Roll a **marble** across the surface—it curves toward the dip because the surface itself is bent.`
+          },
+          {
+            label: "Driving on a Banked Racetrack",
+            markdown: `On a tilted oval track, steering straight ahead naturally guides a car along a curve.
+
+> **Key takeaway:** Orbits happen because objects follow curved paths shaped by mass, not because an invisible string yanks them sideways.`
+          }
+        ],
+        references: [
+          {
+            citation: "Fraknoi, A., Morrison, D., & Wolff, S. (2022). Astronomy 2e, Section 24.2: Spacetime and Gravity. OpenStax, Rice University.",
+            note: "Translates general relativity into accessible concepts like curved space, gravitational lensing, and planetary motion.",
+            url: "https://openstax.org/details/books/astronomy-2e"
+          },
+          {
+            citation: "Einstein, A. (1916). The Foundation of the General Theory of Relativity. Annalen der Physik, 354(7), 769–822.",
+            note: "The original landmark paper proposing that gravitation arises from the curvature of spacetime determined by matter and energy.",
+            url: "https://einsteinpapers.press.princeton.edu/vol6-trans/158"
+          }
+        ]
+      },
+      {
+        id: "confirmation-bias",
+        subject: "Psychology",
+        level: "Cognitive Science",
+        title: "Confirmation Bias",
+        summary: "Confirmation bias is the tendency to search for, notice, and favor information that confirms what you already believe while overlooking evidence that contradicts it.",
+        steps: [
+          "Form an initial belief, hunch, or preference about a person, product, or situation.",
+          "Give extra weight and attention to facts or stories that support that belief.",
+          "Examine opposing evidence more critically or dismiss it as an exception."
+        ],
+        examples: [
+          {
+            label: "Reading Reviews After Picking a Gadget",
+            markdown: `Once you decide you want a specific phone:
+
+- **5-star praise** feels convincing and accurate.
+- **Battery or screen complaints** get brushed off as rare bad luck.`
+          },
+          {
+            label: "Noticing 'Unlucky' Days",
+            markdown: `If you expect a rough day on a certain date:
+
+- A traffic jam or spilled coffee stands out as proof that the date is bad.
+- Calm days on that same date are forgotten much faster.`
+          }
+        ],
+        references: [
+          {
+            citation: "Nickerson, R. S. (1998). Confirmation Bias: A Ubiquitous Phenomenon in Many Guises. Review of General Psychology, 2(2), 175–220.",
+            note: "A thorough, readable overview of how confirmation bias shows up in everyday judgment, science, policy, and personal beliefs.",
+            url: "https://doi.org/10.1037/1089-2680.2.2.175"
+          },
+          {
+            citation: "Spielman, R. M., Jenkins, W. J., & Lovett, M. D. (2020). Psychology 2e, Section 7.3: Problem Solving. OpenStax, Rice University.",
+            note: "Explains how mental shortcuts and existing expectations shape reasoning and why checking counter-evidence improves decisions.",
+            url: "https://openstax.org/details/books/psychology-2e"
+          }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "easy_study_md_refs_v1";
+    let lessons = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultLessons;
+
+    // Navigation state: "menu" | "topics" | "detail"
+    let currentView = "menu";
+    let selectedSubject = null;
+    let selectedLessonId = null;
+    let searchQuery = "";
+
+    // Speech state
+    let activeSpeakingId = null;
+    let availableVoices = [];
+
+    const appView = document.getElementById("appView");
+    const navBar = document.getElementById("navBar");
+    const voiceSelect = document.getElementById("voiceSelect");
+    const rateSelect = document.getElementById("rateSelect");
+    const audioStatus = document.getElementById("audioStatus");
+    const mainMenuBtn = document.getElementById("mainMenuBtn");
+    const homeLogoBtn = document.getElementById("homeLogoBtn");
+    const toggleDrawerBtn = document.getElementById("toggleDrawerBtn");
+    const addDrawer = document.getElementById("addDrawer");
+    const lessonForm = document.getElementById("lessonForm");
+
+    const ttsSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+
+    const micSvg = `
+      <svg class="mic-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/>
+      </svg>`;
+
+    const stopSvg = `
+      <svg class="mic-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="6" y="6" width="12" height="12" rx="2"/>
+      </svg>`;
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str ?? "";
+      return div.innerHTML;
+    }
+
+    function formatInlineMarkdown(text) {
+      let safe = escapeHtml(text);
+      // Inline code: `code`
+      safe = safe.replace(/`([^`]+)`/g, "<code>$1</code>");
+      // Bold: **text**
+      safe = safe.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      // Italic: *text*
+      safe = safe.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+      return safe;
+    }
+
+    function renderMarkdown(mdText) {
+      const raw = String(mdText ?? "").replace(/\r\n/g, "\n").trim();
+      if (!raw) return "";
+
+      const lines = raw.split("\n");
+      let html = "";
+      let inUl = false;
+      let inOl = false;
+      let inQuote = false;
+      let paraLines = [];
+
+      function closeParagraph() {
+        if (paraLines.length) {
+          html += `<p>${formatInlineMarkdown(paraLines.join(" "))}</p>`;
+          paraLines = [];
+        }
+      }
+
+      function closeListsAndQuotes() {
+        if (inUl) {
+          html += "</ul>";
+          inUl = false;
+        }
+        if (inOl) {
+          html += "</ol>";
+          inOl = false;
+        }
+        if (inQuote) {
+          html += "</blockquote>";
+          inQuote = false;
+        }
+      }
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+
+        if (!trimmed) {
+          closeParagraph();
+          closeListsAndQuotes();
+          continue;
+        }
+
+        const headingMatch = trimmed.match(/^#{1,4}\s+(.+)$/);
+        if (headingMatch) {
+          closeParagraph();
+          closeListsAndQuotes();
+          html += `<h4>${formatInlineMarkdown(headingMatch[1])}</h4>`;
+          continue;
+        }
+
+        const quoteMatch = trimmed.match(/^>\s?(.*)$/);
+        if (quoteMatch) {
+          closeParagraph();
+          if (inUl) { html += "</ul>"; inUl = false; }
+          if (inOl) { html += "</ol>"; inOl = false; }
+          if (!inQuote) { html += "<blockquote>"; inQuote = true; }
+          html += `<p>${formatInlineMarkdown(quoteMatch[1])}</p>`;
+          continue;
+        }
+
+        const ulMatch = trimmed.match(/^[-*+]\s+(.+)$/);
+        if (ulMatch) {
+          closeParagraph();
+          if (inOl) { html += "</ol>"; inOl = false; }
+          if (inQuote) { html += "</blockquote>"; inQuote = false; }
+          if (!inUl) { html += "<ul>"; inUl = true; }
+          html += `<li>${formatInlineMarkdown(ulMatch[1])}</li>`;
+          continue;
+        }
+
+        const olMatch = trimmed.match(/^\d+\.\s+(.+)$/);
+        if (olMatch) {
+          closeParagraph();
+          if (inUl) { html += "</ul>"; inUl = false; }
+          if (inQuote) { html += "</blockquote>"; inQuote = false; }
+          if (!inOl) { html += "<ol>"; inOl = true; }
+          html += `<li>${formatInlineMarkdown(olMatch[1])}</li>`;
+          continue;
+        }
+
+        closeListsAndQuotes();
+        paraLines.push(trimmed);
+      }
+
+      closeParagraph();
+      closeListsAndQuotes();
+      return `<div class="md-content">${html}</div>`;
+    }
+
+    function stripMarkdown(mdText) {
+      return String(mdText ?? "")
+        .replace(/`([^`]+)`/g, "$1")
+        .replace(/\*\*([^*]+)\*\*/g, "$1")
+        .replace(/\*([^*]+)\*/g, "$1")
+        .replace(/^#{1,4}\s+/gm, "")
+        .replace(/^>\s?/gm, "")
+        .replace(/^[-*+]\s+/gm, "")
+        .replace(/^\d+\.\s+/gm, "")
+        .replace(/\n+/g, " ")
+        .trim();
+    }
+
+    function populateVoices() {
+      if (!ttsSupported) {
+        audioStatus.textContent = "Text-to-speech not supported in this browser";
+        return;
+      }
+      availableVoices = window.speechSynthesis.getVoices();
+      voiceSelect.innerHTML = "";
+      if (!availableVoices.length) {
+        const opt = document.createElement("option");
+        opt.textContent = "Default System Voice";
+        voiceSelect.appendChild(opt);
+        return;
+      }
+      availableVoices.forEach((voice, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        opt.textContent = `${voice.name} (${voice.lang})`;
+        if (voice.default) opt.selected = true;
+        voiceSelect.appendChild(opt);
+      });
+    }
+
+    if (ttsSupported) {
+      populateVoices();
+      window.speechSynthesis.onvoiceschanged = populateVoices;
+    }
+
+    function stopSpeech() {
+      if (ttsSupported) {
+        window.speechSynthesis.cancel();
+      }
+      activeSpeakingId = null;
+      audioStatus.textContent = "Ready to read";
+      syncSpeakingButtons();
+    }
+
+    function buildLessonSpeech(lesson) {
+      const summary = stripMarkdown(lesson.summary);
+      const steps = lesson.steps.map((s, i) => `Step ${i + 1}: ${stripMarkdown(s)}`).join(" ");
+      const examples = lesson.examples
+        .map(ex => `${stripMarkdown(ex.label)}. ${stripMarkdown(ex.markdown)}`)
+        .join(" ");
+      return `${lesson.title}. ${summary} How it works: ${steps} Everyday examples: ${examples}`;
+    }
+
+    function toggleLessonSpeech(event, lesson) {
+      if (event) event.stopPropagation();
+      if (!ttsSupported) return;
+
+      if (activeSpeakingId === lesson.id) {
+        stopSpeech();
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(buildLessonSpeech(lesson));
+      const voice = availableVoices[voiceSelect.value];
+      if (voice) utterance.voice = voice;
+      utterance.rate = parseFloat(rateSelect.value) || 0.95;
+
+      utterance.onstart = () => {
+        audioStatus.textContent = `Reading: ${lesson.title}`;
+      };
+      utterance.onend = () => {
+        activeSpeakingId = null;
+        audioStatus.textContent = "Finished reading";
+        syncSpeakingButtons();
+      };
+      utterance.onerror = () => {
+        activeSpeakingId = null;
+        audioStatus.textContent = "Audio stopped";
+        syncSpeakingButtons();
+      };
+
+      activeSpeakingId = lesson.id;
+      syncSpeakingButtons();
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function syncSpeakingButtons() {
+      document.querySelectorAll("[data-mic-id]").forEach(btn => {
+        const isSpeaking = btn.dataset.micId === activeSpeakingId;
+        btn.classList.toggle("speaking", isSpeaking);
+        btn.innerHTML = isSpeaking ? `${stopSvg}<span>Stop</span>` : `${micSvg}<span>Listen</span>`;
+        btn.setAttribute("aria-label", isSpeaking ? "Stop reading aloud" : "Read lesson aloud");
+      });
+      document.querySelectorAll("[data-topic-card-id]").forEach(card => {
+        card.classList.toggle("speaking-card", card.dataset.topicCardId === activeSpeakingId);
+      });
+    }
+
+    function goToMenu() {
+      stopSpeech();
+      currentView = "menu";
+      selectedSubject = null;
+      selectedLessonId = null;
+      searchQuery = "";
+      render();
+    }
+
+    function openSubject(subjectName) {
+      stopSpeech();
+      currentView = "topics";
+      selectedSubject = subjectName;
+      selectedLessonId = null;
+      searchQuery = "";
+      render();
+    }
+
+    function openTopicDetail(lessonId) {
+      stopSpeech();
+      currentView = "detail";
+      selectedLessonId = lessonId;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getSubjects() {
+      return [...new Set(lessons.map(l => l.subject))];
+    }
+
+    function getFilteredTopics() {
+      return lessons.filter(lesson => {
+        const matchesSubject = selectedSubject === "All Topics" || lesson.subject === selectedSubject;
+        const q = searchQuery.trim().toLowerCase();
+        if (!q) return matchesSubject;
+        const haystack = [
+          lesson.title,
+          lesson.subject,
+          stripMarkdown(lesson.summary),
+          ...lesson.steps.map(stripMarkdown),
+          ...lesson.examples.map(e => `${e.label} ${stripMarkdown(e.markdown)}`)
+        ].join(" ").toLowerCase();
+        return matchesSubject && haystack.includes(q);
+      });
+    }
+
+    function renderNavBar() {
+      if (currentView === "menu") {
+        navBar.innerHTML = `<div class="breadcrumb"><span>Main Menu &rsaquo; Choose a Subject Category</span></div>`;
+        return;
+      }
+
+      if (currentView === "topics") {
+        navBar.innerHTML = `
+          <div class="breadcrumb">
+            <button type="button" class="crumb-link" id="crumbMenu">Main Menu</button>
+            <span>&rsaquo;</span>
+            <span>${escapeHtml(selectedSubject)}</span>
+          </div>
+          <button type="button" class="btn" id="backFromTopicsBtn">&larr; All Categories</button>
+        `;
+        document.getElementById("crumbMenu").addEventListener("click", goToMenu);
+        document.getElementById("backFromTopicsBtn").addEventListener("click", goToMenu);
+        return;
+      }
+
+      const lesson = lessons.find(l => l.id === selectedLessonId);
+      const backSubject = selectedSubject || (lesson ? lesson.subject : "All Topics");
+
+      navBar.innerHTML = `
+        <div class="breadcrumb">
+          <button type="button" class="crumb-link" id="crumbMenu2">Main Menu</button>
+          <span>&rsaquo;</span>
+          <button type="button" class="crumb-link" id="crumbSubject">${escapeHtml(backSubject)}</button>
+          <span>&rsaquo;</span>
+          <span>${escapeHtml(lesson ? lesson.title : "Topic")}</span>
+        </div>
+        <button type="button" class="btn" id="backToTopicsBtn">&larr; Back to ${escapeHtml(backSubject)} Boxes</button>
+      `;
+      document.getElementById("crumbMenu2").addEventListener("click", goToMenu);
+      document.getElementById("crumbSubject").addEventListener("click", () => openSubject(backSubject));
+      document.getElementById("backToTopicsBtn").addEventListener("click", () => openSubject(backSubject));
+    }
+
+    function renderMenuView() {
+      const subjects = getSubjects();
+      const cards = [
+        {
+          name: "All Topics",
+          count: lessons.length,
+          desc: "Browse every hard topic across all subjects in big clickable boxes."
+        },
+        ...subjects.map(sub => ({
+          name: sub,
+          count: lessons.filter(l => l.subject === sub).length,
+          desc: categoryDescriptions[sub] || `Straightforward lessons and Markdown examples in ${sub}.`
+        }))
+      ];
+
+      appView.innerHTML = `
+        <h2 class="view-title">Choose a Subject Category</h2>
+        <p class="view-subtitle">Select a subject on the main menu to see its big topic boxes.</p>
+        <div class="category-grid">
+          ${cards.map(cat => `
+            <button type="button" class="category-box" data-category="${escapeHtml(cat.name)}">
+              <div>
+                <div class="category-top">
+                  <h2>${escapeHtml(cat.name)}</h2>
+                  <span class="count-pill">${cat.count} ${cat.count === 1 ? "topic" : "topics"}</span>
+                </div>
+                <p style="margin-top:0.65rem;">${escapeHtml(cat.desc)}</p>
+              </div>
+              <span class="open-hint">Open ${escapeHtml(cat.name)} &rarr;</span>
+            </button>
+          `).join("")}
+        </div>
+      `;
+
+      appView.querySelectorAll(".category-box").forEach(box => {
+        box.addEventListener("click", () => openSubject(box.dataset.category));
+      });
+    }
+
+    function renderTopicCardHtml(lesson) {
+      const firstEx = lesson.examples[0];
+      return `
+        <article class="topic-box" data-topic-card-id="${escapeHtml(lesson.id)}">
+          <div>
+            <div class="topic-box-header">
+              <div>
+                <span class="tag">${escapeHtml(lesson.subject)}</span>
+                <h3>${escapeHtml(lesson.title)}</h3>
+              </div>
+              <button type="button" class="mic-btn" data-mic-id="${escapeHtml(lesson.id)}" aria-label="Read lesson aloud">
+                ${micSvg}<span>Listen</span>
+              </button>
+            </div>
+            <div class="preview" style="margin-top:0.75rem;">${renderMarkdown(lesson.summary)}</div>
+            ${firstEx ? `
+              <div class="example-snippet" style="margin-top:0.85rem;">
+                <div style="font-weight:700;margin-bottom:0.25rem;">Example: ${escapeHtml(firstEx.label)}</div>
+                ${renderMarkdown(firstEx.markdown)}
+              </div>
+            ` : ""}
+          </div>
+          <div class="topic-box-footer">
+            <span>Click box for full view</span>
+            <span>Open &rarr;</span>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderTopicsView() {
+      const topics = getFilteredTopics();
+
+      appView.innerHTML = `
+        <h2 class="view-title">${escapeHtml(selectedSubject)}</h2>
+        <p class="view-subtitle">Click any big topic box for a full, easy-to-read breakdown—or tap Listen to hear it out loud.</p>
+        <div class="search-box">
+          <input type="search" id="topicSearchInput" value="${escapeHtml(searchQuery)}" placeholder="Filter topics inside ${escapeHtml(selectedSubject)}..." aria-label="Filter topics" />
+        </div>
+        <div class="topic-grid">
+          ${topics.length
+            ? topics.map(renderTopicCardHtml).join("")
+            : `<div class="topic-box"><p class="preview">No topics match "${escapeHtml(searchQuery)}" in ${escapeHtml(selectedSubject)}.</p></div>`
+          }
+        </div>
+      `;
+
+      const searchEl = document.getElementById("topicSearchInput");
+      searchEl.addEventListener("input", e => {
+        searchQuery = e.target.value;
+        const grid = appView.querySelector(".topic-grid");
+        const updated = getFilteredTopics();
+        grid.innerHTML = updated.length
+          ? updated.map(renderTopicCardHtml).join("")
+          : `<div class="topic-box"><p class="preview">No matching topics found.</p></div>`;
+        bindTopicBoxEvents(updated);
+        syncSpeakingButtons();
+      });
+
+      bindTopicBoxEvents(topics);
+      syncSpeakingButtons();
+    }
+
+    function bindTopicBoxEvents(list) {
+      const map = new Map(list.map(item => [item.id, item]));
+      appView.querySelectorAll(".topic-box[data-topic-card-id]").forEach(card => {
+        const id = card.dataset.topicCardId;
+        const lesson = map.get(id);
+        if (!lesson) return;
+        card.addEventListener("click", () => openTopicDetail(id));
+        const mic = card.querySelector("[data-mic-id]");
+        if (mic) {
+          mic.addEventListener("click", ev => toggleLessonSpeech(ev, lesson));
+        }
+      });
+    }
+
+    function renderDetailView() {
+      const pool = selectedSubject && selectedSubject !== "All Topics"
+        ? lessons.filter(l => l.subject === selectedSubject)
+        : lessons;
+
+      const idx = pool.findIndex(l => l.id === selectedLessonId);
+      const lesson = idx >= 0 ? pool[idx] : lessons.find(l => l.id === selectedLessonId);
+
+      if (!lesson) {
+        goToMenu();
+        return;
+      }
+
+      const prevLesson = idx > 0 ? pool[idx - 1] : null;
+      const nextLesson = idx >= 0 && idx < pool.length - 1 ? pool[idx + 1] : null;
+
+      appView.innerHTML = `
+        <article class="detail-card">
+          <div class="detail-top">
+            <div>
+              <span class="tag">${escapeHtml(lesson.subject)} &bull; ${escapeHtml(lesson.level || "Study Guide")}</span>
+              <h2 class="detail-title">${escapeHtml(lesson.title)}</h2>
+            </div>
+            <button type="button" class="mic-btn" data-mic-id="${escapeHtml(lesson.id)}" aria-label="Read lesson aloud">
+              ${micSvg}<span>Listen</span>
+            </button>
+          </div>
+
+          <div class="detail-section">
+            <h3>Straightforward Summary</h3>
+            <div class="detail-summary">${renderMarkdown(lesson.summary)}</div>
+          </div>
+
+          <div class="detail-section">
+            <h3>How It Works Step by Step</h3>
+            <ol class="steps-list">
+              ${lesson.steps.map(step => `<li>${formatInlineMarkdown(step)}</li>`).join("")}
+            </ol>
+          </div>
+
+          <div class="detail-section">
+            <h3>Everyday Examples (Markdown)</h3>
+            <div class="examples-grid">
+              ${lesson.examples.map(ex => `
+                <div class="example-card">
+                  <span class="example-card-title">${escapeHtml(ex.label)}</span>
+                  ${renderMarkdown(ex.markdown)}
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="references-box">
+            <h3>References &amp; What They Cover</h3>
+            <ul class="ref-list">
+              ${lesson.references.map(ref => `
+                <li class="ref-item">
+                  <div class="ref-citation">${escapeHtml(ref.citation)}</div>
+                  ${ref.note ? `<div class="ref-note"><strong>Plain summary:</strong> ${escapeHtml(ref.note)}</div>` : ""}
+                  ${ref.url
+                    ? `<a class="ref-link" href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer">Open Reference Source &rarr;</a>`
+                    : ""}
+                </li>
+              `).join("")}
+            </ul>
+          </div>
+
+          <div class="detail-nav">
+            ${prevLesson
+              ? `<button type="button" class="btn" id="prevTopicBtn">&larr; ${escapeHtml(prevLesson.title)}</button>`
+              : `<span></span>`}
+            ${nextLesson
+              ? `<button type="button" class="btn btn-primary" id="nextTopicBtn">${escapeHtml(nextLesson.title)} &rarr;</button>`
+              : `<span></span>`}
+          </div>
+        </article>
+      `;
+
+      appView.querySelector("[data-mic-id]").addEventListener("click", ev => toggleLessonSpeech(ev, lesson));
+      if (prevLesson) {
+        document.getElementById("prevTopicBtn").addEventListener("click", () => openTopicDetail(prevLesson.id));
+      }
+      if (nextLesson) {
+        document.getElementById("nextTopicBtn").addEventListener("click", () => openTopicDetail(nextLesson.id));
+      }
+
+      syncSpeakingButtons();
+    }
+
+    function render() {
+      renderNavBar();
+      if (currentView === "menu") renderMenuView();
+      else if (currentView === "topics") renderTopicsView();
+      else if (currentView === "detail") renderDetailView();
+    }
+
+    mainMenuBtn.addEventListener("click", goToMenu);
+    homeLogoBtn.addEventListener("click", goToMenu);
+
+    toggleDrawerBtn.addEventListener("click", () => {
+      addDrawer.classList.toggle("open");
+      toggleDrawerBtn.textContent = addDrawer.classList.contains("open") ? "Close Form" : "+ Add Topic";
+    });
+
+    lessonForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const title = document.getElementById("inputTitle").value.trim();
+      const subject = document.getElementById("inputSubject").value.trim();
+      const summary = document.getElementById("inputSummary").value.trim();
+      const stepsRaw = document.getElementById("inputSteps").value.trim();
+      const ex1 = document.getElementById("inputEx1").value.trim();
+      const ex2 = document.getElementById("inputEx2").value.trim();
+      const refCitation = document.getElementById("inputRefCitation").value.trim();
+      const refNote = document.getElementById("inputRefNote").value.trim();
+
+      const steps = stepsRaw.split("\n").map(s => s.trim()).filter(Boolean);
+      const newLesson = {
+        id: `topic-${Date.now()}`,
+        subject,
+        level: "Custom Topic",
+        title,
+        summary,
+        steps: steps.length ? steps : [summary],
+        examples: [
+          { label: "Everyday Example 1", markdown: ex1 },
+          { label: "Everyday Example 2", markdown: ex2 }
+        ],
+        references: [{ citation: refCitation, note: refNote, url: "" }]
+      };
+
+      lessons.unshift(newLesson);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(lessons));
+      lessonForm.reset();
+      addDrawer.classList.remove("open");
+      toggleDrawerBtn.textContent = "+ Add Topic";
+      openSubject(subject);
+    });
+
+    render();
+  </script>
+</body>
+</html>
